@@ -1,4 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    document.getElementById("presentButton").addEventListener("click", function() {
+        // Mostra a mensagem após o clique
+        document.querySelector(".message-container").classList.remove("hidden");
+        
+        // Toca a música (o áudio ou o vídeo)
+        const audio = document.getElementById("background-music");
+        const iframe = document.getElementById("background-video");
+        
+        // Toca a música de fundo se o áudio estiver disponível
+        audio.play();
+        
+        // Ou inicia o vídeo de YouTube com áudio
+        iframe.src += "&autoplay=1"; // Apenas assegura que o vídeo toque se não estiver no loop
+    
+        // Oculta o botão para não ser clicado novamente
+        document.getElementById("presentButton").style.display = "none";
+    });
+
     const presentButton = document.getElementById('presentButton');
     const giftContainer = document.querySelector('.gift-container');
     const messageContainer = document.querySelector('.message-container');
@@ -169,3 +188,4 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.signature').style.opacity = '0';
     document.querySelector('.signature').style.transition = 'opacity 1s ease';
 }); 
+
