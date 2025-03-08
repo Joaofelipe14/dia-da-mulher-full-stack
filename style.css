@@ -270,8 +270,7 @@ button:active {
     }
     
     .message-container {
-        max-height: 85vh;
-    }
+        max-height: 100%;    }
 }
 
 /* Animação de entrada */

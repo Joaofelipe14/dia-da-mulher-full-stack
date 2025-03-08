@@ -1,18 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    
     document.getElementById("presentButton").addEventListener("click", function() {
         // Mostra a mensagem após o clique
         document.querySelector(".message-container").classList.remove("hidden");
         
         // Toca a música (o áudio ou o vídeo)
-        const audio = document.getElementById("background-music");
         const iframe = document.getElementById("background-video");
-        
-        // Toca a música de fundo se o áudio estiver disponível
-        audio.play();
-        
-        // Ou inicia o vídeo de YouTube com áudio
-        iframe.src += "&autoplay=1"; // Apenas assegura que o vídeo toque se não estiver no loop
+                
+        if (iframe) {
+            iframe.src += "&autoplay=1";
+        } else {
+            console.log('Iframe não encontrado!');
+        }
     
         // Oculta o botão para não ser clicado novamente
         document.getElementById("presentButton").style.display = "none";
@@ -23,19 +23,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageContainer = document.querySelector('.message-container');
     const backgroundMusic = document.getElementById('background-music');
     
-    // Configura o volume da música
-    backgroundMusic.volume = 0.6;
-    
+ 
     // Posiciona os corações aleatoriamente
     positionHearts();
     
     // Adiciona efeito ao botão
     presentButton.addEventListener('click', () => {
         // Inicia a reprodução da música
-        playBackgroundMusic();
         
         // Adiciona animação de saída ao container do presente
-        giftContainer.style.transform = 'scale(0.9)';
+        giftContainer.style.transform = 'scale(0.1)';
         giftContainer.style.opacity = '0';
         
         // Espera um pouco e mostra a mensagem
@@ -53,13 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     // Função para reproduzir a música de fundo
-    function playBackgroundMusic() {
-        // Os navegadores modernos têm políticas que exigem interação do usuário para reproduzir áudio
-        // Como o botão foi clicado, podemos iniciar a reprodução
-        backgroundMusic.play().catch(error => {
-            console.log('Não foi possível reproduzir a música:', error);
-        });
-    }
+
     
     // Função para posicionar os corações aleatoriamente
     function positionHearts() {
@@ -96,7 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 250);
     }
     
-    // Função para criar um único confete
     function createConfetti() {
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
@@ -129,19 +119,17 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
     
-    // Função para obter uma cor aleatória
     function getRandomColor() {
         const colors = [
-            '#ff7eb3', // Rosa claro
-            '#e85f99', // Rosa escuro
-            '#fff5f8', // Rosa muito claro
-            '#ff9ccb', // Rosa médio
-            '#ffcce0', // Rosa pastel
+            '#ff7eb3', 
+            '#e85f99', 
+            '#fff5f8', 
+            '#ff9ccb',
+            '#ffcce0',
         ];
         return colors[Math.floor(Math.random() * colors.length)];
     }
     
-    // Adiciona transição suave ao passar o mouse sobre a foto
     const photoFrame = document.querySelector('.photo-frame');
     photoFrame.addEventListener('mouseover', () => {
         photoFrame.style.transform = 'rotate(0deg) scale(1.05)';
@@ -150,39 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     photoFrame.addEventListener('mouseout', () => {
         photoFrame.style.transform = 'rotate(-2deg) scale(1)';
     });
-    
-    // Animação de digitação para a mensagem
-    const message = document.querySelector('.message p');
-    const originalText = message.textContent;
-    message.textContent = '';
-    
-    function typeWriter(text, i, fnCallback) {
-        if (i < text.length) {
-            message.textContent = text.substring(0, i+1);
-            
-            setTimeout(function() {
-                typeWriter(text, i + 1, fnCallback)
-            }, 50);
-        } else if (typeof fnCallback == 'function') {
-            setTimeout(fnCallback, 700);
-        }
-    }
-    
-    // Inicia a animação de digitação quando a mensagem se tornar visível
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                setTimeout(() => {
-                    typeWriter(originalText, 0, () => {
-                        document.querySelector('.signature').style.opacity = '1';
-                    });
-                }, 1000);
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.5 });
-    
-    observer.observe(message);
+
     
     // Adiciona estilo à assinatura
     document.querySelector('.signature').style.opacity = '0';

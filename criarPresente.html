@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Dados</title>
+
+    <!-- Incluindo o Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* Estilos personalizados */
+        body {
+            background-color: rgba(232, 95, 153, 0.2);
+        }
+
+        .btn-custom {
+            background: linear-gradient(to right, #ff7eb3, #e85f99);
+            color: white;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .form-control {
+            margin-bottom: 10px;
+        }
+
+        /* Estilos do carregamento */
+        #loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .alert {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Crie sua surpresa</h1>
+
+        <form id="dataForm">
+            <div class="form-group">
+                <label for="nomePessoa">Nome da Pessoa</label>
+                <input type="text" class="form-control" id="nomePessoa" placeholder="Nome da pessoa" required>
+            </div>
+
+            <div class="form-group">
+                <label for="tituloInicial">Título Inicial</label>
+                <input type="text" class="form-control" id="tituloInicial" placeholder="Título Inicial" required>
+            </div>
+
+            <div class="form-group">
+                <label for="urlFoto">URL da Foto</label>
+                <input type="text" class="form-control" id="urlFoto" placeholder="URL da Foto" required>
+            </div>
+
+            <div class="form-group">
+                <label for="mensagemTitulo">Título da Mensagem</label>
+                <input type="text" class="form-control" id="mensagemTitulo" placeholder="Título da Mensagem" required>
+            </div>
+
+            <div class="form-group">
+                <label for="mensagemTexto">Mensagem</label>
+                <textarea class="form-control" id="mensagemTexto" placeholder="Mensagem" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="textoFooter">Texto do Footer</label>
+                <input type="text" class="form-control" id="textoFooter" placeholder="Texto do Footer" required>
+            </div>
+
+            <div class="form-group">
+                <label for="urlMusica">URL da Música</label>
+                <input type="text" class="form-control" id="urlMusica" placeholder="URL da Música" required>
+            </div>
+
+            <button type="submit" class="btn btn-custom btn-block">Salvar Dados</button>
+        </form>
+
+
+        <!-- Modal para exibir a URL -->
+<div class="modal" tabindex="-1" role="dialog" id="urlModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Sua URL</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Aqui está sua URL:</p>
+          <a href="#" id="generatedURL" target="_blank" class="btn btn-primary">Clique aqui para acessar a URL</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+        <!-- Indicador de Carregamento (Spinner) -->
+        <div id="loading" class="text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Carregando...</span>
+            </div>
+            <p>Salvando dados, por favor aguarde...</p>
+        </div>
+
+        <!-- Mensagens de Sucesso ou Erro -->
+        <div id="successMessage" class="alert alert-success" style="display: none;">
+            Dados salvos com sucesso!
+        </div>
+        <div id="errorMessage" class="alert alert-danger" style="display: none;">
+            Ocorreu um erro ao salvar os dados. Tente novamente.
+        </div>
+    </div>
+
+    <!-- Incluindo o Bootstrap JS e jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        const SUPABASE_URL = 'https://fotsoyazuukzdoxyulxd.supabase.co/rest/v1/presents';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvdHNveWF6dXVremRveHl1bHhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE0NTM5ODAsImV4cCI6MjA1NzAyOTk4MH0.cc1AsIPj3FROMwJZenNUB1-rOMo-LJo2C6dpwAGz0Eo';
+
+        // Função para salvar dados usando o método POST
+        async function saveData(nomePessoa, tituloInicial, urlFoto, mensagemTitulo, mensagemTexto, textoFooter, urlMusica) {
+            try {
+                // Mostrar o carregamento
+                document.getElementById('loading').style.display = 'block';
+                document.getElementById('successMessage').style.display = 'none';
+                document.getElementById('errorMessage').style.display = 'none';
+
+                const response = await fetch(SUPABASE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        nomePessoa,  // Nome da pessoa fornecido pelo usuário
+                        tituloInicial,  // Título inicial
+                        urlFoto,  // URL da foto
+                        mensagemTitulo,  // Título da mensagem
+                        mensagemTexto,  // Texto da mensagem
+                        textoFooter,  // Texto do footer
+                        urlMusica  // URL da música
+                    }),
+                });
+
+                // Verificar se o status da resposta é 201 (Criado)
+                if (response.status === 201) {
+                    // Ocultar o carregamento
+                    document.getElementById('loading').style.display = 'none';
+                    // Exibir mensagem de sucesso
+                    document.getElementById('successMessage').style.display = 'block';
+                    console.log('Dados salvos com sucesso!');
+                    showModalWithURL(nomePessoa);
+
+                } else {
+                    // Ocultar o carregamento
+                    document.getElementById('loading').style.display = 'none';
+                    // Exibir mensagem de erro
+                    document.getElementById('errorMessage').style.display = 'block';
+                    console.error('Erro ao salvar dados, status:', response.status);
+                }
+            } catch (error) {
+                // Ocultar o carregamento
+                document.getElementById('loading').style.display = 'none';
+                // Exibir mensagem de erro
+                document.getElementById('errorMessage').style.display = 'block';
+                console.error('Erro ao fazer requisição POST:', error);
+            }
+        }
+
+        // Captura os dados do formulário e chama a função para salvar
+        document.getElementById('dataForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // Evita o comportamento padrão do formulário
+
+            // Coleta os dados do formulário
+            const nomePessoa = document.getElementById('nomePessoa').value;
+            const tituloInicial = document.getElementById('tituloInicial').value;
+            const urlFoto = document.getElementById('urlFoto').value;
+            const mensagemTitulo = document.getElementById('mensagemTitulo').value;
+            const mensagemText= document.getElementById('mensagemTexto').value;
+            const textoFooter = document.getElementById('textoFooter').value;
+            const urlMusica = document.getElementById('urlMusica').value;
+
+            // Chama a função para salvar os dados no Supabase
+            saveData(nomePessoa, tituloInicial, urlFoto, mensagemTitulo, mensagemTexto, textoFooter, urlMusica);
+        });
+
+        // Mostrar o modal com a URL gerada
+function showModalWithURL(nomePessoa) {
+    // Gerar a URL fixa com o parâmetro nome
+    const generatedURL = `http://127.0.0.1:5500/dia_da_mulher/index.html?nome=${nomePessoa}`;
+
+    // Atribuir a URL gerada ao link do modal
+    const urlElement = document.getElementById('generatedURL');
+    urlElement.href = generatedURL;
+    urlElement.textContent = generatedURL;
+
+    // Exibir o modal
+    $('#urlModal').modal('show');
+}
+
+    </script>
+</body>
+</html>
