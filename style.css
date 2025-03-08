@@ -17,12 +17,13 @@ body {
 
 .container {
     width: 100%;
-    max-width: 800px;
+    max-width: 1200px;
     padding: 20px;
     position: relative;
 }
 
-.gift-container, .message-container {
+.gift-container,
+.message-container {
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 20px;
     padding: 40px;
@@ -237,9 +238,11 @@ button:active {
         transform: rotate(45deg) translateY(0) scale(0.8);
         opacity: 0;
     }
+
     20% {
         opacity: 0.8;
     }
+
     100% {
         transform: rotate(45deg) translateY(-800px) scale(1.5);
         opacity: 0;
@@ -248,29 +251,32 @@ button:active {
 
 /* Responsividade */
 @media (max-width: 768px) {
-    .gift-container, .message-container {
+
+    .gift-container,
+    .message-container {
         padding: 30px 20px;
     }
-    
+
     h1 {
         font-size: 2.2rem;
     }
-    
+
     h2 {
         font-size: 2rem;
     }
-    
+
     .photo-frame {
         width: 90%;
         max-width: 300px;
     }
-    
+
     .photo-frame img {
         max-height: 300px;
     }
-    
+
     .message-container {
-        max-height: 100%;    }
+        max-height: 85vh;
+    }
 }
 
 /* Animação de entrada */
@@ -279,6 +285,7 @@ button:active {
         opacity: 0;
         transform: scale(0.9);
     }
+
     100% {
         opacity: 1;
         transform: scale(1);
@@ -287,4 +294,4 @@ button:active {
 
 .gift-container {
     animation: fadeInScale 1s ease-out;
-} 
+}
